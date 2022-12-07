@@ -44,7 +44,7 @@ with open("./input_07.txt", "r") as file:
 terminal_hist = terminal_hist.split('$ ')
 terminal_hist = [temp.splitlines() for temp in terminal_hist]
 
-# Initializing the directory treee
+# Initializing the directory tree
 allFolders = []
 rootFolder = Folder(None, "/")
 activeFolder = rootFolder
@@ -74,7 +74,7 @@ for terminal_entry in terminal_hist:
                 raise Exception(f"ls output gave something unexpected which was {output_line_content}")
 
     elif command_exec == "cd":
-        assert len(command_args) == 1, f"cd command should have 1 argument only but here it is f{command}"
+        assert len(command_args) == 1, f"cd command should have 1 argument only but here it is {command}"
         
         cd_arg = command_args[0]
         if cd_arg == "..":
