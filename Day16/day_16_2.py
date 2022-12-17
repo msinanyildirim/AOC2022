@@ -1,4 +1,5 @@
 import itertools
+import re
 
 class Graph():
     def __init__(self):
@@ -71,26 +72,6 @@ class Graph():
 
         return overall_min
 
-import re
-
-with open("./input_16.txt", "r") as file:
-    puzzle_lines = file.read().splitlines()
-
-non_zero_valves = {}
-tunnel_map = Graph()
-for curr_line in puzzle_lines:
-    curr_line_matches = re.match(r"Valve ([A-Z]+) has flow rate=([\d]+); tunnel[s]? lead[s]? to valve[s]? ([A-Z\s,]+)", curr_line)
-    from_node, node_rate, to_nodes = curr_line_matches.groups()
-
-    to_nodes = to_nodes.split(", ")
-    for curr_to_node in to_nodes:
-        tunnel_map.add_edge(from_node, curr_to_node)
-
-    if node_rate != "0":
-        node_rate = int(node_rate)
-        non_zero_valves[from_node] = node_rate
-
-
 
 def pressure_finder(tunnel_map, curr_node, nodes_to_visit, time_limit):
 
@@ -126,30 +107,49 @@ def pressure_finder(tunnel_map, curr_node, nodes_to_visit, time_limit):
     return max_pressure
 
 
-time_limit = 30
-start_node = "AA"
+if __name__ == "__main__":
 
-non_zero_nodes_set = set(non_zero_valves.keys())
-max_pressure = 0
+    with open("./input_16.txt", "r") as file:
+        puzzle_lines = file.read().splitlines()
 
-time_limit -= 4
+    non_zero_valves = {}
+    tunnel_map = Graph()
+    for curr_line in puzzle_lines:
+        curr_line_matches = re.match(r"Valve ([A-Z]+) has flow rate=([\d]+); tunnel[s]? lead[s]? to valve[s]? ([A-Z\s,]+)", curr_line)
+        from_node, node_rate, to_nodes = curr_line_matches.groups()
 
-for n in range(len(non_zero_nodes_set)//2+1):    
-    print(f"{n=}")
+        to_nodes = to_nodes.split(", ")
+        for curr_to_node in to_nodes:
+            tunnel_map.add_edge(from_node, curr_to_node)
 
-    curr_human_combinations = itertools.combinations(non_zero_nodes_set, n)
-    for curr_human_nodes in curr_human_combinations:
-        curr_elephant_nodes = non_zero_nodes_set - set(curr_human_nodes)
+        if node_rate != "0":
+            node_rate = int(node_rate)
+            non_zero_valves[from_node] = node_rate
 
-        curr_human_nodes = {node:non_zero_valves[node] for node in curr_human_nodes}
-        curr_elephant_nodes = {node:non_zero_valves[node] for node in curr_elephant_nodes}
+    time_limit = 30
+    start_node = "AA"
 
-        human_contribution = pressure_finder(tunnel_map, start_node, curr_human_nodes, time_limit)
-        elephant_contribution = pressure_finder(tunnel_map, start_node, curr_elephant_nodes, time_limit)
+    non_zero_nodes_set = set(non_zero_valves.keys())
+    max_pressure = 0
 
-        curr_pressure = human_contribution + elephant_contribution
+    time_limit -= 4
 
-        if curr_pressure > max_pressure:
-            max_pressure = curr_pressure
+    for n in range(len(non_zero_nodes_set)//2+1):    
+        print(f"{n=}")
 
-print(max_pressure)
+        curr_human_combinations = itertools.combinations(non_zero_nodes_set, n)
+        for curr_human_nodes in curr_human_combinations:
+            curr_elephant_nodes = non_zero_nodes_set - set(curr_human_nodes)
+
+            curr_human_nodes = {node:non_zero_valves[node] for node in curr_human_nodes}
+            curr_elephant_nodes = {node:non_zero_valves[node] for node in curr_elephant_nodes}
+
+            human_contribution = pressure_finder(tunnel_map, start_node, curr_human_nodes, time_limit)
+            elephant_contribution = pressure_finder(tunnel_map, start_node, curr_elephant_nodes, time_limit)
+
+            curr_pressure = human_contribution + elephant_contribution
+
+            if curr_pressure > max_pressure:
+                max_pressure = curr_pressure
+
+    print(max_pressure)

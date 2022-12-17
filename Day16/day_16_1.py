@@ -1,4 +1,5 @@
 import itertools
+import re
 
 class Graph():
     def __init__(self):
@@ -71,26 +72,6 @@ class Graph():
 
         return overall_min
 
-import re
-
-with open("./input_16.txt", "r") as file:
-    puzzle_lines = file.read().splitlines()
-
-non_zero_valves = {}
-tunnel_map = Graph()
-for curr_line in puzzle_lines:
-    curr_line_matches = re.match(r"Valve ([A-Z]+) has flow rate=([\d]+); tunnel[s]? lead[s]? to valve[s]? ([A-Z\s,]+)", curr_line)
-    from_node, node_rate, to_nodes = curr_line_matches.groups()
-
-    to_nodes = to_nodes.split(", ")
-    for curr_to_node in to_nodes:
-        tunnel_map.add_edge(from_node, curr_to_node)
-
-    if node_rate != "0":
-        node_rate = int(node_rate)
-        non_zero_valves[from_node] = node_rate
-
-
 
 def pressure_finder(tunnel_map, curr_node, nodes_to_visit, time_limit):
 
@@ -126,9 +107,28 @@ def pressure_finder(tunnel_map, curr_node, nodes_to_visit, time_limit):
     return max_pressure
 
 
-time_limit = 30
-start_node = "AA"
+if __name__ == "__main__":
 
-max_pressure = pressure_finder(tunnel_map, start_node, non_zero_valves, time_limit)
-print(max_pressure)
+    with open("./input_16.txt", "r") as file:
+        puzzle_lines = file.read().splitlines()
+
+    non_zero_valves = {}
+    tunnel_map = Graph()
+    for curr_line in puzzle_lines:
+        curr_line_matches = re.match(r"Valve ([A-Z]+) has flow rate=([\d]+); tunnel[s]? lead[s]? to valve[s]? ([A-Z\s,]+)", curr_line)
+        from_node, node_rate, to_nodes = curr_line_matches.groups()
+
+        to_nodes = to_nodes.split(", ")
+        for curr_to_node in to_nodes:
+            tunnel_map.add_edge(from_node, curr_to_node)
+
+        if node_rate != "0":
+            node_rate = int(node_rate)
+            non_zero_valves[from_node] = node_rate
+
+    time_limit = 30
+    start_node = "AA"
+
+    max_pressure = pressure_finder(tunnel_map, start_node, non_zero_valves, time_limit)
+    print(max_pressure)
 
