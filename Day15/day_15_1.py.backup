@@ -1,0 +1,39 @@
+import re
+
+with open("./input_15.txt", "r") as file:
+    puzzle_input = file.read().splitlines()
+
+
+sensors_pos = []
+beacons_pos = []
+
+for puzzle_line in puzzle_input:
+    xvals = re.findall("x=([\-\d]+)", puzzle_line)
+    yvals = re.findall("y=([\-\d]+)", puzzle_line)
+
+    curr_sensor_pos = [int(xvals[0]), int(yvals[0])]
+    curr_beacon_pos = [int(xvals[1]), int(yvals[1])]
+    
+    sensors_pos.append(curr_sensor_pos)
+    beacons_pos.append(curr_beacon_pos)
+
+sensors_xvals, sensors_yvals = list(zip(*sensors_pos))
+beacons_xvals, beacons_yvals = list(zip(*beacons_pos))
+
+minxval = min(sensors_xvals + beacons_xvals)
+minyval = min(sensors_yvals + beacons_yvals)
+
+for curr_sensor, curr_beacon in zip(sensors_pos, beacons_pos):
+    curr_sensor[0] -= minxval
+    curr_beacon[0] -= minxval
+
+    curr_sensor[1] -= minyval
+    curr_beacon[1] -= minyval
+
+maxxval = max(sensors_xvals + beacons_xvals)
+maxyval = max(sensors_yvals + beacons_yvals)
+
+# grid_state = [["." for _ in range(maxyval)] for _ in range(maxxval)]
+# print(maxxval, len(grid_state))
+
+print(maxxval, maxyval)
