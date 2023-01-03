@@ -104,7 +104,6 @@ class BoardMap:
         if next_tile == " ":
             next_pos, next_dir = self.hard_coded_transitions()
             next_tile = self.pos_to_tile(next_pos)
-            print(f"After transition, the tile is {next_tile=}")
 
         # Change the position and return true if movement can occur, otherwise do nothing and return False
         if next_tile == "#":
@@ -112,7 +111,6 @@ class BoardMap:
         elif next_tile == ".":
             self.pos = next_pos
             self.dir = next_dir
-            print(f"Position changed to {self.pos=} and {self.dir=}")
             return True
         else:
             raise Exception(f"Next tile is {next_tile} which is never expected.")
