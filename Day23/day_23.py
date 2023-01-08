@@ -52,8 +52,6 @@ class ElfGroup:
         curr_elf_locations = conv_result.nonzero()
         for row_idx, col_idx in zip(*curr_elf_locations):
             curr_flag = conv_result[row_idx, col_idx]
-            # if curr_flag == 1:
-            #     continue
             curr_flag = f"{curr_flag:09b}"
             curr_flag = curr_flag[::-1]
             for curr_dir in self.dir_order:
@@ -74,9 +72,6 @@ class ElfGroup:
 
         self.state = np.pad(self.state, (1, 1))
         for new_pos, old_pos in new_pos_to_old.items():
-            # assert self.state[old_pos] == True, f"You are trying to move an elf that does not exist"
-            # assert self.state[new_pos] == False, f"An elf is trying to move to an occupied position"
-
             self.state[old_pos] = False
             self.state[new_pos] = True
 
