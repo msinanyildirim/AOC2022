@@ -72,7 +72,7 @@ class ElfGroup:
 
                     break
 
-        self.state = np.pad(self.state, 1)
+        self.state = np.pad(self.state, (1, 1))
         for new_pos, old_pos in new_pos_to_old.items():
             # assert self.state[old_pos] == True, f"You are trying to move an elf that does not exist"
             # assert self.state[new_pos] == False, f"An elf is trying to move to an occupied position"
