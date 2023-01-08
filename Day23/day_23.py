@@ -70,7 +70,7 @@ class ElfGroup:
 
                     break
 
-        self.state = np.pad(self.state, (1, 1))
+        self.state = np.pad(self.state, 1)
         for new_pos, old_pos in new_pos_to_old.items():
             self.state[old_pos] = False
             self.state[new_pos] = True
